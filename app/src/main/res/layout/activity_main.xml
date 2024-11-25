@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Wi-Fi Networks List -->
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Position Inputs -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp">
+
+
+    </LinearLayout>
+
+    <!-- Save Button -->
+
+
+    <Button
+        android:id="@+id/buttonRescan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Rescan Wifi" />
+
+    <Button
+        android:id="@+id/buttonSendWifiInformation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send WIFI information to server" />
+
+
+</LinearLayout>
