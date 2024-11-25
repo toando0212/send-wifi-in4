@@ -29,10 +29,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    buildToolsVersion = "33.0.1"
 }
 
 dependencies {
-//    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
     implementation(libs.appcompat)
     implementation(libs.material)
