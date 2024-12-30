@@ -1,6 +1,5 @@
 package com.example.determinecoordinates;
 
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -110,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendWifiDataAsJson(JSONArray wifiData) {
         // URL của server
-        String serverUrl = "http://127.0.0.1:5000/coordinates";
+        String serverUrl = "http://192.168.103.114:5000/upload_csv";
 
         OkHttpClient client = new OkHttpClient();
 
