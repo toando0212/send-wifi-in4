@@ -13,6 +13,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,6 +53,14 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private WifiListAdapter wifiListAdapter;
 
+    private boolean isAutoModeEnabled = false; // Trạng thái của chế độ tự động
+    private Handler autoHandler; // Handler để chạy chế độ tự động
+    private Runnable autoTask; // Nhiệm vụ tự động
+
+    private Button buttonToggleAutoMode; // Nút bật/tắt chế độ tự động
+
+    private EditText editTextServerUrl;
+
 
     private Button buttonSendWifiInformation, buttonRescan;
 
@@ -65,9 +74,38 @@ public class MainActivity extends AppCompatActivity {
 
         buttonSendWifiInformation = findViewById(R.id.buttonSendWifiInformation);
         buttonRescan = findViewById(R.id.buttonRescan);
+        buttonToggleAutoMode = findViewById(R.id.buttonToggleAutoMode); // Nút cho chế độ tự động
 
 
+//        editTextServerUrl = findViewById(R.id.editTextServerUrl); // Lấy EditText từ layout
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+
+        // Khởi tạo Handler
+        autoHandler = new Handler();
+
+        buttonToggleAutoMode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleAutoMode();
+            }
+        });
+        autoTask = new Runnable() {
+            @Override
+            public void run() {
+                if (isAutoModeEnabled) {
+                    scanWifiNetworks();
+
+                    // Only proceed if scanning is allowed
+                    if (wifiManager.getScanResults() != null) {
+                        JSONArray wifiDataJson = prepareWifiDataAsJson(wifiManager.getScanResults());
+                        sendWifiDataAsJson(wifiDataJson);
+                    }
+
+                    // Schedule the next scan after a reasonable delay
+                    autoHandler.postDelayed(this, 30000); // 30 seconds
+                }
+            }
+        };
 
         // Check if permissions are granted
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -89,6 +127,14 @@ public class MainActivity extends AppCompatActivity {
         buttonSendWifiInformation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // Lấy URL từ EditText
+                String serverUrl = "http://10.10.16.214:5000/upload_csv";
+
+                if (serverUrl.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Please enter a valid URL", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 // Quét mạng Wi-Fi
                 List<ScanResult> scanResults = wifiManager.getScanResults();
 
@@ -105,11 +151,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    // Hàm bật/tắt chế độ tự động
+    private void toggleAutoMode() {
+        isAutoModeEnabled = !isAutoModeEnabled;
+        if (isAutoModeEnabled) {
+            buttonToggleAutoMode.setText("Stop Auto Mode");
+            autoHandler.post(autoTask); // Bắt đầu chế độ tự động
+        } else {
+            buttonToggleAutoMode.setText("Start Auto Mode");
+            autoHandler.removeCallbacks(autoTask); // Dừng chế độ tự động
+        }
+    }
 
     private void sendWifiDataAsJson(JSONArray wifiData) {
         // URL của server
-        String serverUrl = "http://192.168.103.114:5000/upload_csv";
+        String serverUrl = "http://10.10.16.214:5000/upload_csv";
 
         OkHttpClient client = new OkHttpClient();
 
