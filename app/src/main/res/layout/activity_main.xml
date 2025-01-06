@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background_color"
+    android:background="#F5F5F5"
     android:padding="16dp">
 
     <!-- Header -->
@@ -13,11 +13,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Wi-Fi Scanner"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:textColor="@color/primary_text"
-        android:paddingBottom="16dp" />
+        android:textColor="#333333"
+        android:paddingBottom="12dp" />
 
     <!-- Wi-Fi Networks List -->
     <ListView
@@ -27,7 +27,9 @@
         android:layout_weight="1"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"
-        android:background="@color/list_background" />
+        android:background="#FFFFFF"
+        android:padding="8dp"
+        android:elevation="2dp" />
 
     <!-- Buttons Section -->
     <LinearLayout
@@ -42,29 +44,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/rounded_button"
+            android:backgroundTint="#BDBDBD"
             android:text="Start Auto Mode"
-            android:textColor="@color/button_text"
-            android:textStyle="bold" />
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:padding="12dp" />
 
         <Button
             android:id="@+id/buttonRescan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/rounded_button"
+            android:backgroundTint="#BDBDBD"
             android:text="Rescan Wi-Fi"
-            android:textColor="@color/button_text"
-            android:textStyle="bold" />
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:padding="12dp" />
 
         <Button
             android:id="@+id/buttonSendWifiInformation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_button"
+            android:backgroundTint="#BDBDBD"
             android:text="Send Wi-Fi Information"
-            android:textColor="@color/button_text"
-            android:textStyle="bold" />
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:padding="12dp" />
     </LinearLayout>
 
 </LinearLayout>
