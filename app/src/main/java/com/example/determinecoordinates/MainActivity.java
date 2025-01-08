@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendWifiDataAsJson(JSONArray wifiData) {
-        String serverUrl = "http://10.10.16.214:5000/upload_csv";
+        String serverUrl = "http://10.10.17.93:5000/upload_csv";
 
         OkHttpClient client = new OkHttpClient();
 

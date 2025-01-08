@@ -35,6 +35,7 @@ public class WifiListAdapter extends ArrayAdapter<ScanResult> {
 
         ssidTextView.setText(scanResult.SSID);
         signalStrengthTextView.setText("Signal Strength: " + scanResult.level + " dBm");
+        macAddressTextView.setText(scanResult.BSSID); // Cập nhật giá trị MAC Address
 
         return convertView;
     }
