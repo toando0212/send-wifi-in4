@@ -31,6 +31,50 @@
         android:padding="8dp"
         android:elevation="2dp" />
 
+    <!-- Coordinates Input Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingTop="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="X:"
+            android:textSize="16sp"
+            android:textColor="#333333"
+            android:paddingEnd="8dp" />
+
+        <EditText
+            android:id="@+id/editTextX"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Enter X coordinate"
+            android:inputType="numberDecimal"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Y:"
+            android:textSize="16sp"
+            android:textColor="#333333"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp" />
+
+        <EditText
+            android:id="@+id/editTextY"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Enter Y coordinate"
+            android:inputType="numberDecimal"
+            android:padding="8dp" />
+    </LinearLayout>
+
     <!-- Buttons Section -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,17 +82,6 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:paddingTop="16dp">
-
-        <Button
-            android:id="@+id/buttonToggleAutoMode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="#BDBDBD"
-            android:text="Start Auto Mode"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:padding="12dp" />
 
         <Button
             android:id="@+id/buttonRescan"
@@ -65,11 +98,22 @@
             android:id="@+id/buttonSendWifiInformation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:backgroundTint="#BDBDBD"
-            android:text="Send Wi-Fi Information"
+            android:text="Send "
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:padding="12dp" />
+
+<!--        <Button-->
+<!--            android:id="@+id/buttonSendCoordinates"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:backgroundTint="#BDBDBD"-->
+<!--            android:text="Send Coordinates"-->
+<!--            android:textColor="#FFFFFF"-->
+<!--            android:textStyle="bold"-->
+<!--            android:padding="12dp" />-->
     </LinearLayout>
 
 </LinearLayout>

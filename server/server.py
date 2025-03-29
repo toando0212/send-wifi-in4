@@ -30,7 +30,7 @@ def upload_csv():
         return jsonify({"error": "No data received"}), 400
 
     # Log the received data
-    print("Received Data:", data)
+    # print("Received Data:", data)
     return jsonify({"message": "Data received successfully", "received_data": data}), 200
 
 if __name__ == '_main_':

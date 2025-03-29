@@ -11,6 +11,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -39,16 +40,11 @@ public class MainActivity extends AppCompatActivity {
     private WifiManager wifiManager;
     private ListView listView;
     private WifiListAdapter wifiListAdapter;
+    private EditText editTextX;
+    private EditText editTextY;
 
-    private boolean isAutoModeEnabled = false; // Trạng thái Auto Mode
-    private Handler autoHandler; // Handler để quản lý Auto Mode
-    private Runnable autoTask; // Tác vụ Auto Mode
-    private Runnable countdownTask; // Tác vụ đếm ngược
-    private int countdownTime = 30; // Thời gian đếm ngược 30 giây
-
-    private Button buttonToggleAutoMode;
-    private Button buttonSendWifiInformation;
     private Button buttonRescan;
+    private Button buttonSendWifiInformation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,91 +52,97 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        autoHandler = new Handler();
 
         listView = findViewById(R.id.listView);
-        buttonToggleAutoMode = findViewById(R.id.buttonToggleAutoMode);
+        editTextX = findViewById(R.id.editTextX);
+        editTextY = findViewById(R.id.editTextY);
         buttonRescan = findViewById(R.id.buttonRescan);
         buttonSendWifiInformation = findViewById(R.id.buttonSendWifiInformation);
+//        buttonSendCoordinates = findViewById(R.id.buttonSendCoordinates);
 
-        buttonToggleAutoMode.setOnClickListener(v -> toggleAutoMode());
+//        buttonToggleAutoMode.setOnClickListener(v -> toggleAutoMode());
+//        buttonRescan.setOnClickListener(v -> {
+//            scanWifiNetworks();
+//            Toast.makeText(MainActivity.this, "Scan completed", Toast.LENGTH_SHORT).show();
+//        });
+
+        // Nút Rescan Wi-Fi
         buttonRescan.setOnClickListener(v -> {
             scanWifiNetworks();
             Toast.makeText(MainActivity.this, "Scan completed", Toast.LENGTH_SHORT).show();
         });
-        buttonSendWifiInformation.setOnClickListener(v -> {
-            List<ScanResult> scanResults = wifiManager.getScanResults();
-            JSONArray wifiDataJson = prepareWifiDataAsJson(scanResults);
-            sendWifiDataAsJson(wifiDataJson);
-        });
+        // Nút gửi tín hiệu Wi-Fi để dự đoán vị trí
+        buttonSendWifiInformation.setOnClickListener(v -> sendData());
 
-        // Kiểm tra quyền vị trí
+        // Kiểm tra quyền truy cập vị trí
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST_CODE);
         } else {
             scanWifiNetworks();
         }
 
-        setupAutoTask();
+//        setupAutoTask();
     }
 
-    private void toggleAutoMode() {
-        isAutoModeEnabled = !isAutoModeEnabled;
-
-        if (isAutoModeEnabled) {
-            buttonToggleAutoMode.setText("Stop Auto Mode");
-            startCountdown(); // Bắt đầu đếm ngược
-            autoHandler.post(autoTask); // Bắt đầu tác vụ Auto Mode
-        } else {
-            stopAutoMode(); // Dừng Auto Mode
-        }
-    }
-
-    private void stopAutoMode() {
-        isAutoModeEnabled = false;
-        autoHandler.removeCallbacks(autoTask);
-        autoHandler.removeCallbacks(countdownTask);
-        buttonToggleAutoMode.setText("Start Auto Mode");
-    }
-
-    private void startCountdown() {
-        countdownTime = 30; // Reset thời gian đếm ngược
-
-        countdownTask = new Runnable() {
-            @Override
-            public void run() {
-                if (isAutoModeEnabled) {
-                    buttonToggleAutoMode.setText("Auto Mode: " + countdownTime + "s");
-                    countdownTime--;
-
-                    if (countdownTime < 0) {
-                        countdownTime = 30; // Reset đếm ngược
-                    }
-                    autoHandler.postDelayed(this, 1000); // Lặp lại mỗi giây
-                }
-            }
-        };
-        autoHandler.post(countdownTask);
-    }
-
-    private void setupAutoTask() {
-        autoTask = new Runnable() {
-            @Override
-            public void run() {
-                if (isAutoModeEnabled) {
-                    scanWifiNetworks();
-
-                    if (wifiManager.getScanResults() != null) {
-                        JSONArray wifiDataJson = prepareWifiDataAsJson(wifiManager.getScanResults());
-                        sendWifiDataAsJson(wifiDataJson);
-                    }
-
-                    autoHandler.postDelayed(this, 30000); // Lặp lại sau 30 giây
-                }
-            }
-        };
-    }
+//    private void toggleAutoMode() {
+//        isAutoModeEnabled = !isAutoModeEnabled;
+//
+//        if (isAutoModeEnabled) {
+//            buttonToggleAutoMode.setText("Stop Auto Mode");
+//            startCountdown(); // Bắt đầu đếm ngược
+//            autoHandler.post(autoTask); // Bắt đầu tác vụ Auto Mode
+//        } else {
+//            stopAutoMode(); // Dừng Auto Mode
+//        }
+//    }
+//
+//    private void stopAutoMode() {
+//        isAutoModeEnabled = false;
+//        autoHandler.removeCallbacks(autoTask);
+//        autoHandler.removeCallbacks(countdownTask);
+//        buttonToggleAutoMode.setText("Start Auto Mode");
+//    }
+//
+//    private void startCountdown() {
+//        countdownTime = 30; // Reset thời gian đếm ngược
+//
+//        countdownTask = new Runnable() {
+//            @Override
+//            public void run() {
+//                if (isAutoModeEnabled) {
+//                    buttonToggleAutoMode.setText("Auto Mode: " + countdownTime + "s");
+//                    countdownTime--;
+//
+//                    if (countdownTime < 0) {
+//                        countdownTime = 30; // Reset đếm ngược
+//                    }
+//                    autoHandler.postDelayed(this, 1000); // Lặp lại mỗi giây
+//                }
+//            }
+//        };
+//        autoHandler.post(countdownTask);
+//    }
+//
+//    private void setupAutoTask() {
+//        autoTask = new Runnable() {
+//            @Override
+//            public void run() {
+//                if (isAutoModeEnabled) {
+//                    scanWifiNetworks();
+//
+//                    if (wifiManager.getScanResults() != null) {
+//                        JSONArray wifiDataJson = prepareWifiDataAsJson(wifiManager.getScanResults());
+//                        sendWifiDataAsJson(wifiDataJson);
+//                    }
+//
+//                    autoHandler.postDelayed(this, 30000); // Lặp lại sau 30 giây
+//                }
+//            }
+//        };
+//    }
 
     private void scanWifiNetworks() {
         if (!wifiManager.isWifiEnabled()) {
@@ -192,9 +194,45 @@ public class MainActivity extends AppCompatActivity {
         return wifiArray;
     }
 
-    private void sendWifiDataAsJson(JSONArray wifiData) {
-        String serverUrl = "http://10.10.17.93:5000/upload_csv";
+    private JSONObject prepareCoordinatesAsJson(String xCoord, String yCoord) {
+        JSONObject coordinates = new JSONObject();
+        try {
+            coordinates.put("x", xCoord);
+            coordinates.put("y", yCoord);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return coordinates;
+    }
 
+    private void sendData() {
+        // Lấy dữ liệu Wi-Fi
+        List<ScanResult> scanResults = wifiManager.getScanResults();
+        if (scanResults == null || scanResults.isEmpty()) {
+            Toast.makeText(this, "Không tìm thấy mạng Wi-Fi. Vui lòng quét lại.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        JSONArray wifiDataJson = prepareWifiDataAsJson(scanResults);
+
+        // Lấy tọa độ
+        String xCoord = editTextX.getText().toString().trim();
+        String yCoord = editTextY.getText().toString().trim();
+        if (xCoord.isEmpty() || yCoord.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập cả tọa độ X và Y", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        JSONObject coordinatesJson = prepareCoordinatesAsJson(xCoord, yCoord);
+
+        // Gửi dữ liệu Wi-Fi
+        sendWifiDataForPrediction(wifiDataJson);
+
+        // Gửi tọa độ
+        sendCoordinatesData(coordinatesJson);
+    }
+
+    // Gửi dữ liệu Wi-Fi đến server
+    private void sendWifiDataForPrediction(JSONArray wifiData) {
+        String serverUrl = "http://10.10.17.108:5000/upload_csv";
         OkHttpClient client = new OkHttpClient();
 
         RequestBody body = RequestBody.create(
@@ -210,9 +248,8 @@ public class MainActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
                 runOnUiThread(() ->
-                        Toast.makeText(MainActivity.this, "Failed to send data: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(MainActivity.this, "Gửi dữ liệu Wi-Fi thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show()
                 );
             }
 
@@ -221,11 +258,50 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
                     runOnUiThread(() ->
-                            Toast.makeText(MainActivity.this, "Response: " + responseBody, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(MainActivity.this, "Gửi dữ liệu Wi-Fi thành công: " + responseBody, Toast.LENGTH_SHORT).show()
                     );
                 } else {
                     runOnUiThread(() ->
-                            Toast.makeText(MainActivity.this, "Server error: " + response.code(), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(MainActivity.this, "Lỗi server (Wi-Fi): " + response.code(), Toast.LENGTH_SHORT).show()
+                    );
+                }
+            }
+        });
+    }
+
+    // Gửi tọa độ đến server
+    private void sendCoordinatesData(JSONObject coordinatesData) {
+        String serverUrl = "http://10.10.17.108:5000/upload_actual_coordinates";
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody body = RequestBody.create(
+                coordinatesData.toString(),
+                MediaType.get("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url(serverUrl)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(() ->
+                        Toast.makeText(MainActivity.this, "Gửi tọa độ thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show()
+                );
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    runOnUiThread(() ->
+                            Toast.makeText(MainActivity.this, "Gửi tọa độ thành công: " + responseBody, Toast.LENGTH_SHORT).show()
+                    );
+                } else {
+                    runOnUiThread(() ->
+                            Toast.makeText(MainActivity.this, "Lỗi server (Tọa độ): " + response.code(), Toast.LENGTH_SHORT).show()
                     );
                 }
             }
